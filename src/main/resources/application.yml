@@ -1,0 +1,78 @@
+############################# 访问路径、端口tomcat start #############################
+server:
+  servlet:
+    context-path: /
+  tomcat:
+    max-threads: 1000
+    min-spare-threads: 30
+    uri-encoding: UTF-8
+############################# 访问路径、端口tomcat end ###############################
+
+spring:
+  # Redis����
+  redis:
+    database: 0
+    host: 172.17.172.162
+    password:
+    port: 6379
+
+qit:
+  ######################## Spring Shiro start ########################
+  shiro:
+    # shiro ini �����ַ�������
+    filter-chain-definitions: |
+      /=anon
+      /static/**=anon
+      /templates/**=anon
+      /druid/**=anon
+      /csrf=anon
+    # Ȩ������
+    permission-config:
+      # �ų���½�ǳ���֤�����
+      - urls: /login,/logout,/verificationCode,/logout,/verificationCode,/getProcessInfo,/selectProcessInfo,/index,/adfs/callback,/userinfo,/qes/callback,/detail/callback
+        permission: anon
+        # �ų���̬��Դ
+      - urls: /static/**,/templates/**
+        permission: anon
+        # �ų�Swagger
+      - urls: /docs,/swagger-ui.html, /webjars/springfox-swagger-ui/**,/swagger-resources/**,/v2/api-docs
+        permission: anon
+        # �ų�SpringBootAdmin
+      - urls: /,/favicon.ico,/actuator/**,/instances/**,/assets/**,/sba-settings.js,/applications/**
+        permission: anon
+        # �ų������ʼ����ԡ�MFALģ���ʼ����� ��ؽӿ�
+      - urls: /send/mail,/Application/requestorTo*/**,/MFALReport/downloadCompReport
+        permission: anon
+  ######################## Spring Shiro end ##########################
+
+  ############################ JWT start #############################
+  jwt:
+    token-name: token
+    secret: LENOVO@QIT^ABC$$
+    #ǩ����
+    issuer: qit_server
+    #���ܶ���
+    audience: web
+    # Ĭ�Ϲ���ʱ��1Сʱ����λ����
+    expire-second: 3600
+    # �Ƿ�ˢ��token
+    refresh-token: true
+    # ˢ��token��ʱ������Ĭ��10���ӣ���λ����
+    refresh-token-countdown: 600
+    # redisУ��jwt token�Ƿ����,��ѡ
+    redis-check: true
+    # true: ͬһ���˺�ֻ�������һ�ε�½token��Ч��false��ͬһ���˺ſɶ�ε�½
+    single-login: false
+    # ��ֵУ�飬��������Զ�����ֵ����ʹ��secretУ�飬20200116��Ϊtrue��֧���ⲿ�û�ʹ�õ��Զ�����
+    salt-check: true
+  ############################ JWT end ###############################
+
+  ############################ LDAP start #############################
+  ldap:
+    searchFilter: (&(objectCategory=person)(objectClass=user)(sAMAccountName=<uid>))
+    context: OU=User Accounts,DC=lenovo,DC=com
+    url: ldap://10.176.2.1:636
+  ############################ LDAP end ###############################
+
+############################### qit end ###############################
+
